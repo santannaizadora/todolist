@@ -4,30 +4,52 @@ import { TaskType } from '../@Types/taskType';
 import axios from 'axios';
 import { Dispatch, SetStateAction } from 'react';
 
-function Task({ task, setTask }: { task: TaskType, setTask: Dispatch<SetStateAction<TaskType[]>> }) {
+function Task({
+  task,
+  setTask,
+}: {
+  task: TaskType;
+  setTask: Dispatch<SetStateAction<TaskType[]>>;
+}) {
   const { id, name, isComplete } = task;
-
   return (
     <Container key={id}>
       <Title>{name}</Title>
       <Button
         onClick={() => {
-          axios.put(`https://api20221202134334.azurewebsites.net/api/ToDoItems/${id}`, {
-            id,
-            name,
-            isComplete: !isComplete,
-          }).then((response) => {
-            setTask((prevState) => {
-              return prevState.map((task) => {
-                if (task.id === id) {
-                  return response.data;
-                }
-                return task;
-              });
+          setTask((prevState) => {
+            return prevState.map((task) => {
+              if (task.id === id) {
+                return {
+                  ...task,
+                  isComplete: !task.isComplete,
+                };
+              }
+              return task;
             });
           });
-        }}
-      >{isComplete ? <CheckSquare size={24} /> : <Square size={24} />}</Button>
+          axios
+            .put(`https://api20221202134334.azurewebsites.net/api/ToDoItems/${id}`, {
+              id,
+              name,
+              isComplete: !isComplete,
+            })
+            .then((response) => {
+              setTask((prevState) => {
+                return prevState.map((task) => {
+                  if (task.id === id) {
+                    return {
+                      ...task,
+                      isComplete: !task.isComplete,
+                    };
+                  }
+                  return task;
+                });
+              });
+            });
+        }}>
+        {isComplete ? <CheckSquare size={24} /> : <Square size={24} />}
+      </Button>
     </Container>
   );
 }
@@ -40,6 +62,8 @@ const Container = styled.div`
   border: 1px solid #d4d4d4;
   border-radius: 5px;
   margin-bottom: 10px;
+  min-width: 300px;
+  max-width: 500px;
 `;
 
 const Title = styled.h1`

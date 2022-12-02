@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [tasks, setTasks] = useState<TaskType []>([
+  const [tasks, setTasks] = useState<TaskType[]>([
     {
       id: 1,
       name: 'passear com o cachorro',
@@ -28,21 +28,26 @@ function App() {
 
   useEffect(() => {
     getTasks();
-  }, tasks);
+  }, [tasks]);
 
   return (
     <Container>
       <Title>Minhas tarefas</Title>
       {tasks.map((task) => {
-        return <Task task={tasks} setTask={setTasks} />;
+        return <Task task={task} setTask={setTasks} />;
       })}
     </Container>
   );
 }
 
 const Container = styled.div`
+  display flex;
+  flex-direction: column;
   margin: 0;
   padding: 20px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Title = styled.h1``;
